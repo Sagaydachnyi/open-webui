@@ -336,16 +336,6 @@ def get_storage_provider(storage_provider: str):
     else:
         raise RuntimeError(f"Unsupported storage provider: {storage_provider}")
     return Storage
-{
-    "name": "OpenAI ChatGPT",
-    "type": "chat",
-    "module": "openwebui.providers.openai",
-    "class": "OpenAIChatProvider",
-    "kwargs": {
-      "model": "gpt-3.5-turbo",       // або "gpt-4"
-      "temperature": 0.7,
-      "max_tokens": 1024
-    }
-  }
+
 
 Storage = get_storage_provider(STORAGE_PROVIDER)
