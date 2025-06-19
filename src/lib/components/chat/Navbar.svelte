@@ -24,7 +24,6 @@
 	import UserMenu from '$lib/components/layout/Sidebar/UserMenu.svelte';
 	import MenuLines from '../icons/MenuLines.svelte';
 	import AdjustmentsHorizontal from '../icons/AdjustmentsHorizontal.svelte';
-
 	import PencilSquare from '../icons/PencilSquare.svelte';
 
 	const i18n = getContext('i18n');
@@ -50,125 +49,118 @@
 
 	<div class=" flex max-w-full w-full mx-auto px-1 pt-0.5 bg-transparent">
 		<div class="flex items-center w-full max-w-full">
-			<div
-				class="{$showSidebar
-					? 'md:hidden'
-					: ''} mr-1 self-start flex flex-none items-center text-gray-600 dark:text-gray-400"
-			>
+			<!-- sidebar toggle & model selector — без змін -->
+			<div class="{$showSidebar ? 'md:hidden' : ''} mr-1 self-start flex flex-none items-center text-gray-600 dark:text-gray-400">
 				<button
 					id="sidebar-toggle-button"
 					class="cursor-pointer px-2 py-2 flex rounded-xl hover:bg-gray-50 dark:hover:bg-gray-850 transition"
-					on:click={() => {
-						showSidebar.set(!$showSidebar);
-					}}
+					on:click={() => showSidebar.set(!$showSidebar)}
 					aria-label="Toggle Sidebar"
 				>
-					<div class=" m-auto self-center">
-						<MenuLines />
-					</div>
+					<MenuLines />
 				</button>
 			</div>
 
-			<div
-				class="flex-1 overflow-hidden max-w-full py-0.5
-			{$showSidebar ? 'ml-1' : ''}
-			"
-			>
+			<div class="flex-1 overflow-hidden max-w-full py-0.5 {$showSidebar ? 'ml-1' : ''}">
 				{#if showModelSelector}
 					<ModelSelector bind:selectedModels showSetDefault={!shareEnabled} />
 				{/if}
 			</div>
 
-			<div class="self-start flex flex-none items-center text-gray-600 dark:text-gray-400">
-				<!-- <div class="md:hidden flex self-center w-[1px] h-5 mx-2 bg-gray-300 dark:bg-stone-700" /> -->
+			<div class="self-start flex flex-none items-center text-gray-600 dark:text-gray-400 space-x-2">
+				<!-- === Нові кнопки: Asana, Drive, Email === -->
+				<a
+					href="https://app.asana.com/"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="px-3 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
+				>
+					Asana
+				</a>
+				<a
+					href="https://drive.google.com/"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+				>
+					Drive
+				</a>
+				<a
+					href="mailto:your.email@example.com"
+					class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition"
+				>
+					Email
+				</a>
+				<!-- ========================================= -->
+
 				{#if shareEnabled && chat && (chat.id || $temporaryChatEnabled)}
 					<Menu
 						{chat}
 						{shareEnabled}
-						shareHandler={() => {
-							showShareChatModal = !showShareChatModal;
-						}}
-						downloadHandler={() => {
-							showDownloadChatModal = !showDownloadChatModal;
-						}}
+						shareHandler={() => (showShareChatModal = !showShareChatModal)}
+						downloadHandler={() => (showDownloadChatModal = !showDownloadChatModal)}
 					>
 						<button
 							class="flex cursor-pointer px-2 py-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-850 transition"
 							id="chat-context-menu-button"
 						>
-							<div class=" m-auto self-center">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="size-5"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
-									/>
-								</svg>
-							</div>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke-width="1.5"
+								stroke="currentColor"
+								class="size-5"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+								/>
+							</svg>
 						</button>
 					</Menu>
 				{/if}
 
 				<Tooltip content={$i18n.t('Controls')}>
 					<button
-						class=" flex cursor-pointer px-2 py-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-850 transition"
-						on:click={async () => {
-							await showControls.set(!$showControls);
-						}}
+						class="flex cursor-pointer px-2 py-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-850 transition"
+						on:click={() => showControls.set(!$showControls)}
 						aria-label="Controls"
 					>
-						<div class=" m-auto self-center">
-							<AdjustmentsHorizontal className=" size-5" strokeWidth="0.5" />
-						</div>
+						<AdjustmentsHorizontal className="size-5" strokeWidth="0.5" />
 					</button>
 				</Tooltip>
 
 				<Tooltip content={$i18n.t('New Chat')}>
 					<button
 						id="new-chat-button"
-						class=" flex {$showSidebar
-							? 'md:hidden'
-							: ''} cursor-pointer px-2 py-2 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-850 transition"
-						on:click={() => {
-							initNewChat();
-						}}
+						class="flex {$showSidebar ? 'md:hidden' : ''} cursor-pointer px-2 py-2 rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-850 transition"
+						on:click={() => initNewChat()}
 						aria-label="New Chat"
 					>
-						<div class=" m-auto self-center">
-							<PencilSquare className=" size-5" strokeWidth="2" />
-						</div>
+						<PencilSquare className="size-5" strokeWidth="2" />
 					</button>
 				</Tooltip>
 
-				{#if $user !== undefined && $user !== null}
+				{#if $user}
 					<UserMenu
 						className="max-w-[200px]"
-						role={$user?.role}
+						role={$user.role}
 						on:show={(e) => {
-							if (e.detail === 'archived-chat') {
-								showArchivedChats.set(true);
-							}
+							if (e.detail === 'archived-chat') showArchivedChats.set(true);
 						}}
 					>
 						<button
 							class="select-none flex rounded-xl p-1.5 w-full hover:bg-gray-50 dark:hover:bg-gray-850 transition"
 							aria-label="User Menu"
 						>
-							<div class=" self-center">
-								<img
-									src={$user?.profile_image_url}
-									class="size-6 object-cover rounded-full"
-									alt="User profile"
-									draggable="false"
-								/>
-							</div>
+							<img
+								src={$user.profile_image_url}
+								class="size-6 object-cover rounded-full"
+								alt="User profile"
+								draggable="false"
+							/>
 						</button>
 					</UserMenu>
 				{/if}
